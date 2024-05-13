@@ -61,3 +61,15 @@ Furthermore, the [bsdiff memory usage](https://www.daemonology.net/bsdiff/) is `
 - Igor Pavlov & Lasse Collin for liblzma
 - Colin Percival for bsdiff
 - Benjamin Strachan for conducting the performance benchmarks.
+
+## Docker images
+
+```bash
+docker build --target=qbdiff --tag qbdiffx .
+```
+
+or
+
+```bash
+docker build --target=qbpatch --tag qbpatchx .
+```

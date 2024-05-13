@@ -11,7 +11,7 @@ AM_CFLAGS = \
 	-DBLAKE3_NO_SSE2 \
 	-DBLAKE3_NO_AVX2
 
-EXTRA_DIST = LICENSE 3rdparty/libsais-LICENSE README.md build-aux/git-version-gen
+EXTRA_DIST = LICENSE 3rdparty/libsais-LICENSE README.md
 
 pkgconfig_DATA = qbdiff.pc
 
@@ -40,28 +40,6 @@ CLEANFILES = $(bin_PROGRAMS)
 # AM_DEFAULT_VERBOSITY = 1
 
 # End standard generic autotools stuff
-
-# Begin special handling for autoconf VERSION being updated on commit
-
-BUILT_SOURCES = .version
-CLEANFILES += $(BUILT_SOURCES) .version-prev
-
-_BRANCH_REF != $(AWK) '{print ".git/" $$2}' .git/HEAD 2>/dev/null ||:
-
-.version: $(_BRANCH_REF)
-	@if [ -e "$(srcdir)/.tarball-version" ]; then \
-		printf "$(VERSION)" > $@; \
-	else \
-		touch "$@-prev"; \
-		if [ -e "$@" ]; then \
-			cp "$@" "$@-prev"; \
-		fi; \
-		./build-aux/git-version-gen "$(srcdir)/.tarball-version" > $@; \
-		cmp -s "$@" "$@-prev" || autoreconf configure.ac --force; \
-	fi
-
-dist-hook:
-	printf "$(VERSION)" > "$(distdir)/.tarball-version"
 
 # Begin developer convenience targets
 

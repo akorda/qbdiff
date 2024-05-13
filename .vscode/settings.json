@@ -25,6 +25,9 @@
         "config.log": true,
         "config.status": true,
     },
+    "C_Cpp.default.defines": [
+        "_OPENMP"
+    ],
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/include/"
     ]
