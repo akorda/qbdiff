@@ -1,0 +1,31 @@
+{
+    "files.associations": {
+        "libqbdiff.h": "c",
+        "intrin.h": "c"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.lo": true,
+        "**/*.o": true,
+        "src/.deps": true,
+        "src/.dirstamp": true,
+        ".libs": true,
+        "src/.libs": true,
+        ".version": true,
+        ".version-prev": true,
+        "autom4te.cache": true,
+        "*.la": true,
+        "*.pc": true,
+        "*.pc.in": true,
+        "config.log": true,
+        "config.status": true,
+    },
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include/"
+    ]
+}
