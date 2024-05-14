@@ -1,0 +1,16 @@
+{
+  "name": "qbdiff",
+  "dockerFile": "Dockerfile",
+  "mounts": [],
+  "forwardPorts": [],
+  "postCreateCommand": "./.devcontainer/post_create.sh",
+  "remoteUser": "root",
+  "containerUser": "root",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}
