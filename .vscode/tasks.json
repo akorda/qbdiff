@@ -40,7 +40,7 @@
             "command": "autoreconf --install && ./configure && make",
         },
         {
-            "label": "docker-qbdiff",
+            "label": "docker-qbdiffx",
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -52,14 +52,14 @@
             "command": "docker",
             "args": [
                 "build",
-                "--target=qbdiff",
+                "--target=qbdiffx",
                 "--tag",
                 "qbdiffx",
                 "."
             ]
         },
         {
-            "label": "docker-qbpatch",
+            "label": "docker-qbpatchx",
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -71,7 +71,49 @@
             "command": "docker",
             "args": [
                 "build",
-                "--target=qbpatch",
+                "--target=qbpatchx",
+                "--tag",
+                "qbpatchx",
+                "."
+            ]
+        },
+        {
+            "label": "distroless-qbdiffx",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "command": "docker",
+            "args": [
+                "build",
+                "-f",
+                "Dockerfile.distroless",
+                "--target=qbdiffx",
+                "--tag",
+                "qbdiffx",
+                "."
+            ]
+        },
+        {
+            "label": "distroless-qbpatchx",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "command": "docker",
+            "args": [
+                "build",
+                "-f",
+                "Dockerfile.distroless",
+                "--target=qbpatchx",
                 "--tag",
                 "qbpatchx",
                 "."
