@@ -64,6 +64,8 @@ Furthermore, the [bsdiff memory usage](https://www.daemonology.net/bsdiff/) is `
 
 ## Docker images
 
+### Debian
+
 ```bash
 docker build --target=qbdiff --tag qbdiffx .
 ```
@@ -72,4 +74,16 @@ or
 
 ```bash
 docker build --target=qbpatch --tag qbpatchx .
+```
+
+### Distroless
+
+```bash
+docker build -f Dockerfile.distroless --target=qbdiffx --tag qbdiffx:distroless .
+```
+
+or
+
+```bash
+docker build -f Dockerfile.distroless --target=qbpatchx --tag qbpatchx:distroless .
 ```

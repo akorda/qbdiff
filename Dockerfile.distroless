@@ -1,0 +1,61 @@
+FROM amd64/debian:bookworm-slim AS build
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    autoconf \
+    automake \
+    clang \
+    liblzma-dev \
+    libomp-dev \
+    libtool \
+    m4 \
+    make \
+    pkg-config \
+    git \
+    wget \
+    unzip
+    
+WORKDIR /app
+RUN wget -q https://github.com/akorda/qbdiff/archive/refs/heads/main.zip \
+    && unzip main.zip -d /app
+
+WORKDIR /app/qbdiff-main
+RUN autoreconf --install \
+    && ./configure \
+    && make \
+    && make install
+    
+FROM gcr.io/distroless/cc-debian12 AS runtime-base
+
+# liblzma: https://packages.debian.org/bookworm/amd64/liblzma5/filelist
+COPY --from=build /lib/x86_64-linux-gnu/liblzma.so.5 /lib/x86_64-linux-gnu/liblzma.so.5
+COPY --from=build /lib/x86_64-linux-gnu/liblzma.so.5.4.1 /lib/x86_64-linux-gnu/liblzma.so.5.4.1
+# COPY --from=build /usr/share/doc/liblzma5/AUTHORS /usr/share/doc/liblzma5/AUTHORS
+# COPY --from=build /usr/share/doc/liblzma5/NEWS.gz /usr/share/doc/liblzma5/NEWS.gz
+# COPY --from=build /usr/share/doc/liblzma5/THANKS /usr/share/doc/liblzma5/THANKS
+# COPY --from=build /usr/share/doc/liblzma5/changelog.Debian.gz /usr/share/doc/liblzma5/changelog.Debian.gz
+# COPY --from=build /usr/share/doc/liblzma5/changelog.gz /usr/share/doc/liblzma5/changelog.gz
+# COPY --from=build /usr/share/doc/liblzma5/copyright /usr/share/doc/liblzma5/copyright
+
+# libomp5-14: https://packages.debian.org/bookworm/amd64/libomp5-14/filelist
+COPY --from=build /usr/lib/llvm-14/lib/libomp-14.so.5 /usr/lib/llvm-14/lib/libomp-14.so.5
+COPY --from=build /usr/lib/llvm-14/lib/libomp.so.5 /usr/lib/llvm-14/lib/libomp.so.5
+COPY --from=build /usr/lib/x86_64-linux-gnu/libomp.so.5 /usr/lib/x86_64-linux-gnu/libomp.so.5
+# COPY --from=build /usr/share/doc/libomp5-14/NEWS.Debian.gz /usr/share/doc/libomp5-14/NEWS.Debian.gz
+# COPY --from=build /usr/share/doc/libomp5-14/changelog.Debian.gz /usr/share/doc/libomp5-14/changelog.Debian.gz
+# COPY --from=build /usr/share/doc/libomp5-14/copyright /usr/share/doc/libomp5-14/copyright
+# COPY --from=build /usr/share/lintian/overrides/libomp5-14 /usr/share/lintian/overrides/libomp5-14
+
+FROM runtime-base AS app-common
+COPY --from=build /app/qbdiff-main/.libs/*.so* /usr/lib/
+COPY --from=build /usr/local/lib/libqbdiff.so /usr/local/lib/libqbdiff.so
+
+FROM app-common AS qbdiffx
+COPY --from=build /app/qbdiff-main/.libs/qbdiff /app/qbdiff
+WORKDIR /app
+ENTRYPOINT ["./qbdiff"]
+
+FROM app-common AS qbpatchx
+COPY --from=build /app/qbdiff-main/.libs/qbpatch /app/qbpatch
+WORKDIR /app
+ENTRYPOINT ["./qbpatch"]
